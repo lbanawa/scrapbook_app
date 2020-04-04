@@ -28,8 +28,17 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         getData()
     }
     
+    // capture the message sent by detailsVC and call the getData function so that we can have access to the data again
+    override func viewWillAppear(_ animated: Bool) {
+        NotificationCenter.default.addObserver(self, selector: #selector(getData), name: NSNotification.Name("newData"), object: nil)
+    }
+    
+    
     // retrieve data from CoreData database
-    func getData() {
+    @objc func getData() {
+        
+        titleArray.removeAll(keepingCapacity: false)
+        idArray.removeAll(keepingCapacity: false)
         
         let appDelegate = UIApplication.shared.delegate as! AppDelegate // access AppDelegat.swift
         let context = appDelegate.persistentContainer.viewContext

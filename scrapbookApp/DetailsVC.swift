@@ -16,6 +16,7 @@ class DetailsVC: UIViewController, UIImagePickerControllerDelegate, UINavigation
     @IBOutlet weak var authorText: UITextField!
     @IBOutlet weak var yearText: UITextField!
     
+    
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -83,7 +84,9 @@ class DetailsVC: UIViewController, UIImagePickerControllerDelegate, UINavigation
             print ("error")
         }
         
-        
+        // send/ show information to user
+        NotificationCenter.default.post(name: NSNotification.Name("newData"), object: nil)
+        self.navigationController?.popViewController(animated: true)
         
     }
     
