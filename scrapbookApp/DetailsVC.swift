@@ -15,6 +15,7 @@ class DetailsVC: UIViewController, UIImagePickerControllerDelegate, UINavigation
     @IBOutlet weak var titleText: UITextField!
     @IBOutlet weak var authorText: UITextField!
     @IBOutlet weak var yearText: UITextField!
+    @IBOutlet weak var saveButton: UIButton!
     
     var chosenPhoto = ""
     var chosenPhotoId : UUID?
@@ -23,6 +24,9 @@ class DetailsVC: UIViewController, UIImagePickerControllerDelegate, UINavigation
         super.viewDidLoad()
         
         if chosenPhoto != ""{
+            
+            saveButton.isHidden = true // hide the save button when viewing data that has already been saved
+            
             // Core Data
             
             let appDelegate = UIApplication.shared.delegate as! AppDelegate
@@ -67,6 +71,8 @@ class DetailsVC: UIViewController, UIImagePickerControllerDelegate, UINavigation
             
             
         } else {
+            saveButton.isHidden = false
+            saveButton.isEnabled = false // do not allow save button to be clicked if user has not chosen an image
             titleText.text = ""
             authorText.text = ""
             yearText.text = ""
@@ -98,6 +104,7 @@ class DetailsVC: UIViewController, UIImagePickerControllerDelegate, UINavigation
     // tells the delegate that the user picked an image
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         imageView.image = info[.editedImage] as? UIImage // cast it optionally as a UIImage in case user uploads invalid file or cancels upload
+        saveButton.isEnabled = true // only allow save button to be clicked when user chooses an image
         self.dismiss(animated: true, completion: nil) // dismiss picker when finished choosing image
         
     }

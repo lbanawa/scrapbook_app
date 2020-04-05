@@ -113,6 +113,7 @@
                     <connections>
                         <outlet property="authorText" destination="OgC-a5-7CL" id="FvC-Sr-d1n"/>
                         <outlet property="imageView" destination="YPg-BM-ro8" id="SOW-KS-Pbs"/>
+                        <outlet property="saveButton" destination="B19-Kj-zM2" id="rQ5-v1-V4n"/>
                         <outlet property="titleText" destination="Cn9-p9-l2W" id="HV5-rW-9RX"/>
                         <outlet property="yearText" destination="UuX-iI-zUr" id="V3Y-Dg-yoe"/>
                     </connections>
