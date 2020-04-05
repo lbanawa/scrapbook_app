@@ -16,10 +16,24 @@ class DetailsVC: UIViewController, UIImagePickerControllerDelegate, UINavigation
     @IBOutlet weak var authorText: UITextField!
     @IBOutlet weak var yearText: UITextField!
     
-    
+    var chosenPhoto = ""
+    var chosenPhotoId : UUID?
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        if chosenPhoto != ""{
+            // Core Data - use the id to get information from the database
+            
+            let stringUUID = chosenPhotoId!.uuidString // convert UUID to a string
+            
+            
+            
+        } else {
+            titleText.text = ""
+            authorText.text = ""
+            yearText.text = ""
+        }
         
         // Recognizers
         
