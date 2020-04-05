@@ -14,6 +14,8 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     @IBOutlet weak var tableView: UITableView!
     var titleArray = [String]()
     var idArray = [UUID]()
+    var selectedPhoto = ""
+    var selectedPhotoId : UUID?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -48,19 +50,21 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         
         do {
             let results = try context.fetch(fetchRequest)
-            
-            for result in results as! [NSManagedObject]{
-                if let title = result.value(forKey: "title") as? String {
-                    self.titleArray.append(title)
+            if results.count > 0 {
+                for result in results as! [NSManagedObject]{
+                    if let title = result.value(forKey: "title") as? String {
+                        self.titleArray.append(title)
+                    }
+                    
+                    if let id = result.value(forKey: "id") as? UUID {
+                        self.idArray.append(id)
+                    }
+                    
+                    self.tableView.reloadData() // reload data of tableview to account for addition of new data
+                    
                 }
-                
-                if let id = result.value(forKey: "id") as? UUID {
-                    self.idArray.append(id)
-                }
-                
-                self.tableView.reloadData() // reload data of tableview to account for addition of new data
-                
             }
+            
             
         } catch {
             print("error")
@@ -71,6 +75,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     // action to bring user to detailsVC when plus sign on navigation bar is clicked
     @objc func addButtonClicked() {
+        selectedPhoto = ""
         performSegue(withIdentifier: "toDetailsVC", sender: nil)
     }
     
@@ -83,6 +88,20 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         cell.textLabel?.text = titleArray[indexPath.row]
         return cell
         
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "toDetailsVC" {
+            let destinationVC = segue.destination as! DetailsVC
+            destinationVC.chosenPhoto = selectedPhoto
+            destinationVC.chosenPhotoId = selectedPhotoId
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        selectedPhoto = titleArray[indexPath.row]
+        selectedPhotoId = idArray[indexPath.row]
+        performSegue(withIdentifier: "toDetailsVC", sender: nil)
     }
 
 

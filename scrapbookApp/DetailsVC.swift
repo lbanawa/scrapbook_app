@@ -16,10 +16,61 @@ class DetailsVC: UIViewController, UIImagePickerControllerDelegate, UINavigation
     @IBOutlet weak var authorText: UITextField!
     @IBOutlet weak var yearText: UITextField!
     
-    
+    var chosenPhoto = ""
+    var chosenPhotoId : UUID?
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        if chosenPhoto != ""{
+            // Core Data
+            
+            let appDelegate = UIApplication.shared.delegate as! AppDelegate
+            let context = appDelegate.persistentContainer.viewContext
+            
+            let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Photos")
+            let idString = chosenPhotoId?.uuidString
+            
+            // find the id equal to the idString -- this is better than using the title to identify the data since there may be duplicate titles
+            fetchRequest.predicate = NSPredicate(format: "id = %@", idString!) // the predicate is used to define logical conditions used to constrain a search for a fetch
+            fetchRequest.returnsObjectsAsFaults = false
+            
+            do {
+                let results = try context.fetch(fetchRequest)
+                
+                if results.count > 0 {
+                    for result in results as! [NSManagedObject] {
+                        
+                        if let title = result.value(forKey: "title") as? String {
+                            titleText.text = title
+                        }
+                        
+                        if let author = result.value(forKey: "author") as? String {
+                            authorText.text = author
+                        }
+                        
+                        if let year = result.value(forKey: "year") as? Int {
+                            yearText.text = String(year)
+                        }
+                        
+                        if let imageData = result.value(forKey: "image") as? Data {
+                            let image = UIImage(data: imageData)
+                            imageView.image = image
+                        }
+                        
+                    }
+                }
+                
+            } catch {
+                print("error")
+            }
+            
+            
+        } else {
+            titleText.text = ""
+            authorText.text = ""
+            yearText.text = ""
+        }
         
         // Recognizers
         
